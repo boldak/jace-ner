@@ -4,25 +4,24 @@ module.exports = {
 	
 	mode: process.env.NODE_ENV || "development", // production (heroku NODE_ENV variable) or development
 	
-	lang: process.env.NER_LANG || "en",
+	lang: process.env.NER_LANG || "uk",
 
 	models: {
 		destDir: path.resolve( __dirname, './MITIE-models'),
 		source:{
 			en: {
 				name:'English',
-				url: "https://github.com/boldak/jace-ner/blob/master/build/data/en_model.zip?raw=true"
-				// file: path.resolve( __dirname, './build/data/en_model.zip')
+				url: "https://github.com/jace-developer/MITIE-models/raw/main/en_model.zip"
 			},
 
 			uk: {
 				name:'Ukrainian',
-				url:'https://lang.org.ua/static/downloads/ner_models/uk_model.dat.bz2'
+				url:'https://github.com/jace-developer/MITIE-models/raw/main/uk_model.zip'
 			},
 
 			ru: {
 				name:'Russian',
-				url:'https://lang.org.ua/static/downloads/ner_models/ru_model.dat.bz2'
+				url:'https://github.com/jace-developer/MITIE-models/raw/main/ru_model.zip'
 			}
 		}
 	},
@@ -38,3 +37,6 @@ module.exports = {
 	port: process.env.PORT || 3000
 
 }
+
+
+
