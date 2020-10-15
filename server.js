@@ -29,7 +29,7 @@ console.log(JSON.stringify(config, null, " "))
 
 let ner = new PythonShell('ner.py', _.extend( config.python, {args: config.lang}));
 
-let lang_detect = new PythonShell('lang_detect.py', config.python);
+// let lang_detect = new PythonShell('lang_detect.py', config.python);
 
 var ner_result_storage = {result: null};
 var lang_detect_result_storage = {result: null};
@@ -49,9 +49,9 @@ ner.on('message', function (message) {
 	store(message, ner_result_storage, 'ner_result');
 });
 
-lang_detect.on('message', function (message) {
-	store(message, lang_detect_result_storage, 'lang_detect');
-});
+// lang_detect.on('message', function (message) {
+// 	store(message, lang_detect_result_storage, 'lang_detect');
+// });
 
 function clearResults() {
 	ner_result_storage.result = null;
