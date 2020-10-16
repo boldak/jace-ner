@@ -10,8 +10,8 @@ MITIE_MODELS_PATH = "./MITIE-models/"
 MITIE_MODEL_FILE_SUFFIX = "_model.dat"
 
 if __name__=='__main__':
-    sys.stdin.reconfigure(encoding='utf-8')
-    sys.stdout.reconfigure(encoding='utf-8')
+#     sys.stdin.reconfigure(encoding='utf-8')
+#     sys.stdout.reconfigure(encoding='utf-8')
     lang = sys.argv[1]
     model_name = MITIE_MODELS_PATH + lang + MITIE_MODEL_FILE_SUFFIX
     ner = named_entity_extractor(model_name)
