@@ -27,6 +27,12 @@ console.log("CONFIG")
 console.log(JSON.stringify(config, null, " "))
 
 
+swaggerDocument.info.title = config.models.source[config.lang].title
+swaggerDocument.info.description = config.models.source[config.lang].description
+swaggerDocument.host = config.host
+
+// console.log(JSON.stringify(swaggerDocument,null," "))
+
 let ner = new PythonShell('ner.py', _.extend( config.python, {args: config.lang}));
 
 // let lang_detect = new PythonShell('lang_detect.py', config.python);
