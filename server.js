@@ -12,6 +12,7 @@ const config  = require("./config")
 
 const app = express();
 app.use(CORS())
+app.use(express.static(config.publicDir));
 app.use(bodyParser.text());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -113,7 +114,7 @@ app.post("/ner/extract_entities_pretty", (req, res) => {
   writeResults('extract_entities_pretty', text, res);
 });
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument,{customCssUrl:"theme-material.css"}));
 
 app.listen(config.port, () => {
   console.log(`JACE-NER SERVICE for ${config.models.source[config.lang].name} language starts on port ${config.port}`);
