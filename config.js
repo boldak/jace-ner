@@ -39,7 +39,7 @@ module.exports = {
 
 			ru: {
 				name:'Russian',
-				title:"Jace NER Service for Ukrainian language",
+				title:"Jace NER Service for Russian language",
 				description:"Provides API for Named Entity Recognition of Russian language. Part of Jace NLP service. Functionality of this service is based on MITIE SVM.",
 				dest: "ru_model.zip",
 				url: [
