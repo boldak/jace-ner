@@ -31,8 +31,8 @@ fs.mkdtemp(path.join(os.tmpdir(), 'MITIE-'))
 	
 	.then( tempDir => {
 		if(config.models.source[config.lang].url){
-			console.log(`Download ${config.models.source[config.lang].url}`);
-			return download(config.models.source[config.lang].url, tempDir)
+			console.log(`Download ${config.models.source[config.lang].url.join("\n")}`);
+			return download(config.models.source[config.lang].url, tempDir, config.models.source[config.lang].dest)
 		}
 		if(config.models.source[config.lang].file) return new Promise( resolve => { resolve(config.models.source[config.lang].file)})
 			
