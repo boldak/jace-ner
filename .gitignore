@@ -40,6 +40,9 @@ build/Release
 # MITIE models directory
 MITIE-models/
 
+# Public Directory
+.public/
+
 # Dependency directories
 node_modules/
 jspm_packages/
