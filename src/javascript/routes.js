@@ -3,6 +3,7 @@ const {PythonShell} = require('python-shell');
 const _ = require("lodash")
 const config  = require("../../config")
 
+const eventEmitter = new EventEmitter();
 
 let ner = new PythonShell('ner.py', _.extend( config.python, {args: config.service.lang}));
 
