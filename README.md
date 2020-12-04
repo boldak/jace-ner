@@ -1,18 +1,27 @@
-# jace-nlp
-Natural Languages Processing Service
+# Requirements (local use)
 
-Prerequisite (will be handled by Docker)
-==
-* node = v12.16.1
-* npm = 6.13.4
-* mitie models (./MITIE-models folder) is handled by git lfs now
-* python = 3.8.6
-  * python should be installed on path: 'C:/Apps/Python/Python38/python.exe' (only 64-bit version).
-If path is another, than change it appropriately in server.js file (python_options.pythonPath)
-  * pip install git+https://github.com/mit-nlp/MITIE.git
-  * pip install langdetect
+npm v.6.13.4
+node v.12.16.1
+python v.3.8.6
 
-How to run
-==
-* npm install
-* npm run start
+# How to run (local, dev)
+
+npm install
+npm run dev
+
+Standard configuration (file config.js)
+lang: "en"
+host: "localhost"
+port: "3001"
+
+# How to deploy (heroku, via CLI, foe lang='en')
+
+1. Create app.
+heroku create -a jace-ner-en
+2. Add buildpacks:
+- heroku/nodejs
+- heroku/python
+3. Set language.
+heroku config:set -a jace-ner-en NER_LANG=en
+4. Deploy!
+git push https://git.heroku.com/jace-ner-en.git HEAD:master

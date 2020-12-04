@@ -15,7 +15,7 @@ module.exports = {
 					"https://raw.githubusercontent.com/boldak/MITIE-NER-models/main/en/en_model.zip.sf-part3",
 					"https://raw.githubusercontent.com/boldak/MITIE-NER-models/main/en/en_model.zip.sf-part4",
 					"https://raw.githubusercontent.com/boldak/MITIE-NER-models/main/en/en_model.zip.sf-part5"
-				]	
+				]
 			},
 
 			uk: {
@@ -46,11 +46,5 @@ module.exports = {
 				]
 			}
 		}
-	},
-	
-	swagger_ui_theme: "material" // available: material, feeling-blue, flattop, monokai, muted, newspaper, outline
-	
+	}
 }
-
-
-

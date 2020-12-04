@@ -1,15 +1,15 @@
-const EventEmitter = require('events');
-const {PythonShell} = require('python-shell');
-const _ = require("lodash")
-const config  = require("../../config")
+const EventEmitter = require('events')
+const {PythonShell} = require('python-shell')
+const _ = require('lodash')
+const config  = require('../../config')
 
 const eventEmitter = new EventEmitter();
 
 let ner = new PythonShell('ner.py', _.extend( config.python, {args: config.service.lang}));
 
-let ner_result_storage = {result: null};
-let lang_detect_result_storage = {result: null};
+console.log('MODEL HAS BEEN LOADED');
 
+let ner_result_storage = {lang: config.service.lang, result: null};
 
 let store = (result, storage, event_name) => {
 	storage.result = result;
@@ -22,66 +22,48 @@ ner.on('message', function (message) {
 
 let clearResults = () => {
 	ner_result_storage.result = null;
-	lang_detect_result_storage.result = null;
 }
 
-let writeResults = (method, text, res) => {
-
-	ner.send(JSON.stringify({method, text}), { mode: 'json' });
+let writeResults = (method, params, res) => {
+	ner.send(JSON.stringify({method, params}), { mode: 'json' });
 	eventEmitter.once('ner_result', () => {
-	    res.send(ner_result_storage.result);
+			ner_result_storage.result = JSON.parse(ner_result_storage.result);
+	    res.json(ner_result_storage);
 	});
 }
 
 module.exports = [
-	
+	{
+		method: "get",
+		path: "/version",
+		handler: (req, res) => {
+		  clearResults();
+			writeResults('get_possible_ner_tags', null, res);
+		}
+	},
+
 	{
 		method: "post",
 		path: "/ner/tokenize",
 		handler: (req, res) => {
 		  clearResults();
-		  var text = req.body;
-		  writeResults('tokenize', text, res);
+			let params = {
+				"text": req.body.text,
+				"offsets": req.body.offsets
+			};
+		  writeResults('tokenize', params, res);
 		}
 	},
-
-	{
-		method: "post",
-		path: "/ner/tokenize_with_offsets",
-		handler: (req, res) => {
-		  clearResults();
-		  var text = req.body;
-		  writeResults('tokenize_with_offsets', text, res);
-		}
-	},
-	
-	{
-		method: "post",
-		path: "/ner/get_possible_ner_tags",
-		handler: (req, res) => {
-		  clearResults();
-		  var lang = req.query.lang;
-		  writeResults('get_possible_ner_tags', lang, res);
-		}
-	},
-	
 	{
 		method: "post",
 		path: "/ner/extract_entities",
 		handler: (req, res) => {
 		  clearResults();
-		  var text = req.body;
-		  writeResults('extract_entities', text, res);
-		}
-	},
-	{
-		method: "post",
-		path: "/ner/extract_entities_pretty",
-		handler: (req, res) => {
-		  clearResults();
-		  var text = req.body;
-		  writeResults('extract_entities_pretty', text, res);
+			let params = {
+				"text": req.body.text,
+				"tags": req.body.tags
+			};
+		  writeResults('extract_entities', params, res);
 		}
 	}
-
 ]

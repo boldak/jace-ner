@@ -1,21 +1,16 @@
+const _ = require('lodash')
+const elegantSpinner = require('elegant-spinner')
+const logUpdate = require('log-update')
+const chalk = require('chalk')
+const unzip = require('./unzip')
+const download = require('./download')
+const fs = require('fs').promises
+const fse = require('fs-extra')
+const path = require('path')
+const os = require('os')
 
-const _ = require("lodash")
-const elegantSpinner = require('elegant-spinner');
-const logUpdate = require('log-update');
-const chalk = require("chalk")
-const unzip = require("./unzip")
-const download = require("./download")
-const fs = require("fs").promises
-const fse = require("fs-extra")
-const path = require("path")
-const os = require("os")
 let frame = elegantSpinner();
-
-
-let config = _.extend(require("../config"), require("./build.config"))
-
-
-// console.log(JSON.stringify(config, null, " "))
+let config = _.extend(require('../config'), require('./build.config'));
 
 console.log(`JACE-NER SERVICE POSTINSTALL IN ${config.service.mode} MODE`)
 console.log(`Install MITIE NER model for ${config.models.source[config.service.lang].name} language`)
@@ -23,22 +18,22 @@ console.log(`Install MITIE NER model for ${config.models.source[config.service.l
 let tempDirectory = ''
 
 fs.mkdtemp(path.join(os.tmpdir(), 'MITIE-'))
-	
+
 	.then( dir => {
 		console.log(`Create temp directory ${dir}`)
 		tempDirectory = dir
 		return dir
 	})
-	
+
 	.then( tempDir => {
 		if(config.models.source[config.service.lang].url){
 			console.log(`Download ${config.models.source[config.service.lang].url.join("\n")}`);
 			return download(config.models.source[config.service.lang].url, tempDir, config.models.source[config.service.lang].dest)
 		}
 		if(config.models.source[config.service.lang].file) return new Promise( resolve => { resolve(config.models.source[config.service.lang].file)})
-			
+
 	})
-	
+
 	.then( filePath => {
 		console.log(`Create model directory ${config.models.destDir}`)
 		return fse.mkdirs(config.models.destDir).then( () => filePath )
@@ -53,23 +48,9 @@ fs.mkdtemp(path.join(os.tmpdir(), 'MITIE-'))
 		console.log(`Remove temp ${tempDirectory}`)
 		fse.remove(tempDirectory)
 	})
-	
-	// .then( () => {
-	// 	console.log(`Remove temp ${config.models.source.en.file}`)
-	// 	fse.remove(config.models.source.en.file)
-	// })
 
 	.then( () => {
 		console.log(chalk.green(`NER Model for ${config.models.source[config.service.lang].name} language is installed into ${config.models.destDir}`))
-	})
-
-	.then(() => {
-		console.log(`Install Swagger UI Theme "${config.swagger_ui_theme}"`)
-		return fse.copy(
-			path.resolve(`./node_modules/swagger-ui-themes/themes/3.x/theme-${config.swagger_ui_theme}.css`),
-			path.resolve(`${config.service.publicDir}/sw-theme.css`),
-			{ overwrite: true}
-		)
 	})
 
 	.then(() => {
@@ -78,10 +59,10 @@ fs.mkdtemp(path.join(os.tmpdir(), 'MITIE-'))
 			let installer = require('execa')("pip", "install -r requirements.txt".split(" "))
 			let stream = installer.stdout;
 		    stream.pipe(process.stdout);
-			return installer	
+			return installer
 		}
 	})
-  	
-  	.catch( e => {
-  		console.log(chalk.red(e.toString()))
-  	});
+
+	.catch( e => {
+		console.log(chalk.red(e.toString()))
+	});
