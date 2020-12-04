@@ -14,7 +14,7 @@ Standard configuration (file config.js)
 - host: "localhost"
 - port: "3001"
 
-# How to deploy (heroku, via CLI, foe lang='en')
+# How to deploy (heroku, via CLI, for lang='en')
 
 1. Create app.
 - heroku create -a jace-ner-en
