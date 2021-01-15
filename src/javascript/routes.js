@@ -25,8 +25,10 @@ let clearResults = () => {
 }
 
 let writeResults = (method, params, res) => {
+	console.log("SEND> ", JSON.stringify({method, params}))
 	ner.send(JSON.stringify({method, params}), { mode: 'json' });
 	eventEmitter.once('ner_result', () => {
+			console.log("RECIEVE> ", ner_result_storage)
 			ner_result_storage.result = JSON.parse(ner_result_storage.result);
 	    res.json(ner_result_storage);
 	});
