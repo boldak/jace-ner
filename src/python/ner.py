@@ -33,7 +33,7 @@ if __name__=='__main__':
                 else:
                     output = tokenize_with_offsets(text)
                     output = [(str(x.decode('UTF-8')), y) for (x, y) in output]
-                output = {"tokens": output}
+                output = {"request": input_json,"response":{ "tokens": output } }
             elif method == 'extract_entities':
                 tags = input_json['params']['tags']
                 if tags == '':
@@ -58,7 +58,7 @@ if __name__=='__main__':
                             }
                         }
                         output.append(obj)
-                output = {"named_entities": output}
+                output = {"request": input_json,"response":{ "named_entities": output}}
         output_json = json.dumps(output, ensure_ascii=False).encode('utf-8')
         sys.stdout.buffer.write(output_json)
         print()

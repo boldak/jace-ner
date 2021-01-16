@@ -2,6 +2,7 @@ const EventEmitter = require('events')
 const {PythonShell} = require('python-shell')
 const _ = require('lodash')
 const config  = require('../../config')
+const v4 = require("uuid").v4
 
 const eventEmitter = new EventEmitter();
 
@@ -9,28 +10,34 @@ let ner = new PythonShell('ner.py', _.extend( config.python, {args: config.servi
 
 console.log('MODEL HAS BEEN LOADED');
 
-let ner_result_storage = {lang: config.service.lang, result: null};
-
-let store = (result, storage, event_name) => {
-	storage.result = result;
-	eventEmitter.emit(event_name);
-}
+let storage = []
 
 ner.on('message', function (message) {
-	store(message, ner_result_storage, 'ner_result');
+	let data = JSON.parse(message)
+	let stored = _.find(storage, s => data.request.params._id == s.params._id)
+	stored.result = data.response
+	eventEmitter.emit("ner_result");
 });
 
-let clearResults = () => {
-	ner_result_storage.result = null;
-}
-
 let writeResults = (method, params, res) => {
-	console.log("SEND> ", JSON.stringify({method, params}))
-	ner.send(JSON.stringify({method, params}), { mode: 'json' });
+	params = _.extend(params,{_id:v4()})
+	
+	let command = {
+		lang: config.service.lang,
+		method, 
+		params
+	}
+	
+	storage.push(command)
+	
+	console.log("SEND> ", JSON.stringify(command))
+	
+	ner.send(JSON.stringify(command), { mode: 'json' });
+	
 	eventEmitter.once('ner_result', () => {
-			console.log("RECIEVE> ", ner_result_storage)
-			ner_result_storage.result = JSON.parse(ner_result_storage.result);
-	    res.json(ner_result_storage);
+			let stored = _.find(storage, s => command.params._id == s.params._id)
+			console.log("RECIEVE> ", stored)
+			res.json(stored);
 	});
 }
 
@@ -39,7 +46,6 @@ module.exports = [
 		method: "get",
 		path: "/version",
 		handler: (req, res) => {
-		  clearResults();
 			writeResults('get_possible_ner_tags', null, res);
 		}
 	},
@@ -48,24 +54,28 @@ module.exports = [
 		method: "post",
 		path: "/ner/tokenize",
 		handler: (req, res) => {
-		  clearResults();
-			let params = {
-				"text": req.body.text,
-				"offsets": req.body.offsets
-			};
-		  writeResults('tokenize', params, res);
+			writeResults(
+			  	'tokenize', 
+			  	{
+					"text": req.body.text || '',
+					"offsets": req.body.offsets || false
+				}, 
+			  	res
+			);
 		}
 	},
 	{
 		method: "post",
 		path: "/ner/extract_entities",
 		handler: (req, res) => {
-		  clearResults();
-			let params = {
-				"text": req.body.text,
-				"tags": req.body.tags
-			};
-		  writeResults('extract_entities', params, res);
+		  	writeResults(
+			  	'extract_entities', 
+			  	{
+					"text": req.body.text || '',
+					"tags": req.body.tags || ''
+				}, 
+			  	res
+			);
 		}
 	}
 ]
