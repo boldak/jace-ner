@@ -35,8 +35,12 @@ let writeResults = (method, params, res) => {
 	ner.send(JSON.stringify(command), { mode: 'json' });
 	
 	eventEmitter.once('ner_result', () => {
+
 			let stored = _.find(storage, s => command.params._id == s.params._id)
+			let index = _.findIndex(storage, s => command.params._id == s.params._id)
+			storage.splice(index,1)
 			console.log("RECIEVE> ", stored)
+			
 			res.json(stored);
 	});
 }
