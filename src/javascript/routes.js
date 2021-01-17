@@ -15,6 +15,9 @@ let storage = []
 ner.on('message', function (message) {
 	let data = JSON.parse(message)
 	let stored = _.find(storage, s => data.request.params._id == s.params._id)
+	console.log("find", data.request.params._id,)
+	console.log(storage.map(s => s.params._id))
+	console.log(stored)
 	stored.result = data.response
 	eventEmitter.emit("ner_result");
 });
