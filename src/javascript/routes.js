@@ -48,6 +48,22 @@ let writeResults = (method, params, res) => {
 module.exports = [
 	{
 		method: "get",
+		path: "/",
+		handler: (req, res) => {
+			writeResults('get_possible_ner_tags', {}, res);
+		}
+	},
+
+	{
+		method: "get",
+		path: "/version",
+		handler: (req, res) => {
+			writeResults('get_possible_ner_tags', {}, res);
+		}
+	},
+
+	{
+		method: "post",
 		path: "/version",
 		handler: (req, res) => {
 			writeResults('get_possible_ner_tags', {}, res);
