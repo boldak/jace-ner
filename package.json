@@ -21,6 +21,7 @@
     "lodash": "^4.17.20",
     "nodemon": "^2.0.6",
     "python-shell": "^2.0.3",
+    "queue-promise": "^2.1.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
