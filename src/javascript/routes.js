@@ -50,7 +50,7 @@ module.exports = [
 		method: "get",
 		path: "/version",
 		handler: (req, res) => {
-			writeResults('get_possible_ner_tags', null, res);
+			writeResults('get_possible_ner_tags', {}, res);
 		}
 	},
 

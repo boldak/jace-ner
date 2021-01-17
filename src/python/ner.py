@@ -21,7 +21,7 @@ if __name__=='__main__':
         output = None
         if method == 'get_possible_ner_tags':
             tags = ner.get_possible_ner_tags()
-            output = {"tags": tags}
+            output = {"request": input_json, "response":{ "tags": tags } }
         else:
             text = input_json['params']['text']
             text = to_bytes(text)
